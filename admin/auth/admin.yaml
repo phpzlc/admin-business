@@ -1,0 +1,19 @@
+# 管理端-首页
+admin_manage_index:
+  path:   /
+  controller: App\Controller\Admin\AdminManageController:index
+
+# 管理端-登录
+admin_manage_login:
+  path:   /login
+  controller: App\Controller\Admin\AuthController:login
+
+# 管理端-退出登录
+admin_manage_logout:
+  path:   /logout
+  controller: App\Controller\Admin\AuthController:logout
+
+# 管理端-修改密码
+admin_manage_edit_password:
+  path:   /edit-password
+  controller: App\Controller\Admin\AuthController:editPassword
