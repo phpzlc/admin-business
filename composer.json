@@ -1,0 +1,30 @@
+{
+    "name": "phpzlc/admin-business",
+    "description": "管理员登录组件",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+      "phpzlc",
+      "admin",
+      "symfony"
+    ],
+    "homepage": "",
+    "authors": [
+      {
+        "name": "海底捞面条师傅",
+        "email": "1847944340@qq.com",
+        "role": "Developer"
+
+      }
+    ],
+    "autoload": {
+      "psr-4": {
+        "PHPZlc\\AdminBusiness": "src/"
+      }
+    },
+    "require": {
+      "phpzlc/phpzlc": "1.*",
+      "phpzlc/admin": "v1.0.1"
+    }
+
+}
