@@ -1,0 +1,114 @@
+{% extends '@PHPZlcAdmin/base/base.html.twig' %}
+
+{% block body %}
+    <body>
+    <div class="login-page" id="login">
+        <div class="login-content">
+            <div class="pull-left login-left">
+                <img src="{{ asset(admin_login_lack_ground_img()) }}" alt="">
+                <p class="login-title">{{ admin_title() }}</p>
+                <div class="login-copy">
+                    ©{{ "now" | date('Y') }} abcdefg
+                </div>
+            </div>
+            <div class="pull-right login-right">
+                <p class="login-right-text">LOGIN</p>
+                <p class="login-right-text2">登录</p>
+                <div class="login-input-content">
+                    <el-input placeholder="请输入账号" v-model="account" clearable class="login-input">
+                    </el-input>
+                    <el-input type="password" placeholder="请输入密码" v-model="password" clearable class="login-input">
+                    </el-input>
+                    {#                    <div class="img-code-content clearfix">#}
+                    {#                        <el-input placeholder="图形验证码" v-model="imgCode" clearable class="login-input">#}
+                    {#                        </el-input>#}
+                    {#                                            <span class="login-img" >#}
+                    {#                        <img id="img" @click="captcha()" class="login-img" width="130px" height="48px" >#}
+                    {#                                            </span>#}
+                    {#                    </div>#}
+                    <el-button type="primary" class="login-btn" @click="loginBtn()">登录</el-button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: '#login',
+            data: function () {
+                return {
+                    account: null,
+                    password: null,
+                    imgCode: null,
+                    data_vue: null,
+
+                }
+            },
+
+            mounted() {
+                // this.captcha();
+            },
+
+            created() {
+                const that = this;
+                // 页面初始化使用
+                document.onkeydown = function (e) {
+                    var key = window.event.keyCode;
+                    if (key == 13) {
+                        that.loginBtn();
+                    }
+                }
+            },
+            methods: {
+                loginBtn() {
+                    const that = this;
+
+                    let validated = that._validate();
+                    if (validated.success) {
+                        $.post("{{ path('admin_manage_login') }}", {account: that.account, password:that.password}, function(data) {
+                            resultPreprocess(that, data, '', '')
+                        }, )
+                    } else {
+                        this.$message.error(validated.msg);
+                    }
+
+                },
+
+                // 判断逻辑
+                _validate() {
+                    // 校验
+                    if (!this.account) {
+                        return {
+                            success: false,
+                            msg: '请输入账号'
+                        }
+                    }
+                    if (!this.password) {
+                        return {
+                            success: false,
+                            msg: '请输入密码'
+                        }
+                    }
+                    // if (!this.imgCode) {
+                    //     return {
+                    //         success: false,
+                    //         msg: '请输入验证码'
+                    //     }
+                    // }
+
+                    return {
+                        success: true
+                    };
+                },
+
+                {#captcha() {#}
+                {#    let that = this;#}
+                {#    $.post("{{ path('public_captcha') }}", {captcha: 'admin_login', format:'base64'}, function(res) {#}
+                {#        document.getElementById('img').src = res;#}
+                {#    }, )#}
+                {#}#}
+
+            }
+        })
+    </script>
+    </body>
+{% endblock %}
