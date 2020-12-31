@@ -11,7 +11,7 @@
 namespace App\Business\AdminBusiness;
 
 use App\Business\AuthBusiness\SubjectAuthInterface;
-use App\Business\UserAuthBusiness;
+use App\Business\AuthBusiness\UserAuthBusiness;
 use App\Entity\Admin;
 use App\Entity\UserAuth;
 use App\Repository\AdminRepository;
