@@ -26,20 +26,31 @@ use Symfony\Component\HttpFoundation\Response;
 class AdminManageController extends SystemBaseController
 {
     /**
+     * 管理策略
+     *
      * @var AdminStrategy
      */
     protected $adminStrategy;
 
     /**
+     * 管理员信息表
+     *
      * @var AdminRepository
      */
     protected $adminRepository;
 
     /**
+     * 当前登录管理员授权信息
+     *
      * @var UserAuth
      */
     protected $curUserAuth;
 
+    /**
+     * 页面标记
+     *
+     * @var string
+     */
     protected $page_tag;
 
     public function inlet($returnType = SystemBaseController::RETURN_HIDE_RESOURCE, $isLogin = true)
