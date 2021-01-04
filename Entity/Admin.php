@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AdminRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Business\AuthBusiness\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=AdminRepository::class)
