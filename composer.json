@@ -23,7 +23,7 @@
       }
     },
     "require": {
-      "phpzlc/admin": "1.*"
+      "phpzlc/admin": "1.0.*"
     }
 
 }
