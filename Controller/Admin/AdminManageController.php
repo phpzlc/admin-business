@@ -61,8 +61,8 @@ class AdminManageController extends SystemBaseController
 
         //菜单
         $menus = [
-            new Menu('组件测试平台', null, null, null, null, [
-                new Menu('组件测试首页', null, null, null, null)
+            new Menu('PHPZlc', null, null, null, null, [
+                new Menu('PHPZlc首页', null, null, null, null)
             ])
         ];
 
@@ -70,7 +70,7 @@ class AdminManageController extends SystemBaseController
 
         //设置管理端基本信息(名称,页面标记,菜单......)
         $this->adminStrategy
-            ->setTitle('组件测试平台')
+            ->setTitle('PHPZlc')
             ->setEntranceUrl($this->generateUrl('admin_manage_index'))
             ->setEndUrl($this->generateUrl('admin_manage_logout'))
             ->setSettingPwdUrl($this->generateUrl('admin_manage_edit_password'))
