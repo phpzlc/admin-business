@@ -70,7 +70,7 @@ class AdminManageController extends SystemBaseController
 
         //设置管理端基本信息(名称,页面标记,菜单......)
         $this->adminStrategy
-            ->setTitle('PHPZlc')
+            ->setTitle('Admin')
             ->setEntranceUrl($this->generateUrl('admin_manage_index'))
             ->setEndUrl($this->generateUrl('admin_manage_logout'))
             ->setSettingPwdUrl($this->generateUrl('admin_manage_edit_password'))
