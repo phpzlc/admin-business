@@ -92,7 +92,7 @@ class AdminManageController extends SystemBaseController
 
             if($userAuth === false){
                 if(self::getReturnType() === SystemBaseController::RETURN_HIDE_RESOURCE){
-                    return Responses::error(Errors::getError(), -1, ['go_url' => $this->adminStrategy->getEntranceUrl()]);
+                    return Responses::error(Errors::getError()->msg, -1, ['go_url' => $this->adminStrategy->getEntranceUrl()]);
                 }else{
                     return $this->redirect($this->adminStrategy->getEntranceUrl());
                 }
