@@ -12,6 +12,7 @@ namespace App\Controller\Admin;
 
 use App\Business\AuthBusiness\AuthTag;
 use App\Business\AuthBusiness\UserAuthBusiness;
+use App\Business\CaptchaBusiness\CaptchaBusiness;
 use PHPZlc\Admin\Strategy\Navigation;
 use PHPZlc\PHPZlc\Abnormal\Errors;
 use PHPZlc\PHPZlc\Responses\Responses;
@@ -43,6 +44,12 @@ class AuthController extends AdminManageController
 
         $account = $request->get('account');
         $password = $request->get('password');
+
+        $ca = new CaptchaBusiness($this->container);
+
+        if(!$ca->isCaptcha('admin_login', $request->get('imgCode'))){
+            return Responses::error(Errors::getError());
+        }
 
         if($userBusiness->accountLogin($account, $password, $this->getParameter('subject_admin')) === false){
             return Responses::error(Errors::getError());

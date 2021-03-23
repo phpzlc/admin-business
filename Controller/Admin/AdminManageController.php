@@ -61,8 +61,8 @@ class AdminManageController extends SystemBaseController
 
         //菜单
         $menus = [
-            new Menu('PHPZlc', null, null, null, null, [
-                new Menu('PHPZlc首页', null, null, null, null)
+            new Menu('首页', null, null, null, null, [
+                new Menu('首页', null, null, null, null)
             ])
         ];
 
