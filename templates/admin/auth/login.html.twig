@@ -66,6 +66,7 @@
                     if (validated.success) {
                         $.post("{{ path('admin_manage_login') }}", {account: that.account, password:that.password, imgCode: that.imgCode}, function(data) {
                             resultPreprocess(that, data, '', '')
+                            that.captcha();
                         }, )
                     } else {
                         this.$message.error(validated.msg);
