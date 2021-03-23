@@ -1,6 +1,6 @@
 {
     "name": "phpzlc/admin-business",
-    "description": "管理员登录组件",
+    "description": "后台业务组件",
     "license": "MIT",
     "type": "library",
     "keywords": [
@@ -27,8 +27,7 @@
       "phpzlc/auth-business": "1.*",
       "phpzlc/platform-business": "1.*",
       "phpzlc/upload-business": "1.*",
-      "phpzlc/captcha-business": "1.*",
-      "phpzlc/rbac-business": "1.*"
+      "phpzlc/captcha-business": "1.*"
     }
 
 }

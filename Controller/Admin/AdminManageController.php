@@ -19,6 +19,7 @@ use PHPZlc\Admin\Strategy\AdminStrategy;
 use PHPZlc\Admin\Strategy\Menu;
 use PHPZlc\PHPZlc\Abnormal\Errors;
 use PHPZlc\PHPZlc\Bundle\Controller\SystemBaseController;
+use PHPZlc\PHPZlc\Doctrine\ORM\Rule\Rule;
 use PHPZlc\PHPZlc\Responses\Responses;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -129,6 +130,25 @@ class AdminManageController extends SystemBaseController
         }
 
         return $this->render('admin/Auth/login.html.twig');
+    }
+
+    private function atSearch($at, $field)
+    {
+        $rules = [];
+
+        if(!empty($at) && $at != 'null'){
+            $at = explode(',', $at);
+
+            if(array_key_exists(0, $at)){
+                $rules[$field . Rule::RA_CONTRAST] = ['>=', $at[0]];
+            }
+
+            if(array_key_exists(1, $at)){
+                $rules[$field . Rule::RA_CONTRAST_2] = ['<=', $at[1]];
+            }
+        }
+
+        return $rules;
     }
 
 }
