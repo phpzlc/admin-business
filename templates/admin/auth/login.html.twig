@@ -19,13 +19,15 @@
                     </el-input>
                     <el-input type="password" placeholder="请输入密码" v-model="password" clearable class="login-input">
                     </el-input>
-                    <div class="img-code-content clearfix">
-                        <el-input placeholder="图形验证码" v-model="imgCode" clearable class="login-input">
-                        </el-input>
-                        <span class="login-img" >
+                    {% if admin_env() != 'dev' %}
+                        <div class="img-code-content clearfix">
+                            <el-input placeholder="图形验证码" v-model="imgCode" clearable class="login-input">
+                            </el-input>
+                            <span class="login-img" >
                             <img id="img" @click="captcha()" class="login-img" width="130px" height="48px" >
                         </span>
-                    </div>
+                        </div>
+                    {% endif %}
                     <el-button type="primary" class="login-btn" @click="loginBtn()">登录</el-button>
                 </div>
             </div>
@@ -89,12 +91,14 @@
                             msg: '请输入密码'
                         }
                     }
+                    {% if admin_env() != 'dev' %}
                     if (!this.imgCode) {
                         return {
                             success: false,
                             msg: '请输入验证码'
                         }
                     }
+                    {% endif %}
                     return {
                         success: true
                     };
