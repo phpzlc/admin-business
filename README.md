@@ -139,3 +139,32 @@ sudo chmod -R 777 public/upload/
         }
     }
 ```
+
+> 登录类引入
+
+文件位置: `src/Business/AuthBusiness/UserAuthBusiness.php`
+
+```php
+    /**
+     * 获取指定平台端方法
+     *
+     * @param $subject_type
+     * @return AdminAuth|mixed
+     * @throws Exception
+     */
+    private function getUserAuthService($subject_type)
+    {
+        if(!array_key_exists($subject_type, $this->subjectAuthCaches)){
+            switch ($subject_type){
+                case $this->getParameter('subject_admin'):
+                    $this->subjectAuthCaches[$subject_type] = new AdminAuth($this->container);
+                    break;
+                    
+                default:
+                    throw new \Exception('授权登录权限不存在');
+            }
+        }
+        
+        return $this->subjectAuthCaches[$subject_type];
+    }
+```

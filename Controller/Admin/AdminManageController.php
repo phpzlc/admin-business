@@ -132,6 +132,13 @@ class AdminManageController extends SystemBaseController
         return $this->render('admin/Auth/login.html.twig');
     }
 
+    /**
+     * 时间段筛选
+     *
+     * @param $at
+     * @param $field
+     * @return array
+     */
     private function atSearch($at, $field)
     {
         $rules = [];
