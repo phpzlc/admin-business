@@ -54,7 +54,7 @@ class AdminManageController extends SystemBaseController
      */
     protected $page_tag;
 
-    public function inlet($returnType = SystemBaseController::RETURN_HIDE_RESOURCE, $isLogin = true)
+    public function inlet($returnType = SystemBaseController::RETURN_SHOW_RESOURCE, $isLogin = true)
     {
         PlatformClass::setPlatform($this->getParameter('platform_admin'));
 
