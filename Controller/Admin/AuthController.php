@@ -96,7 +96,7 @@ class AuthController extends AdminManageController
         $this->adminStrategy->setNavigations([new Navigation('修改密码')]);
 
         if($request->getMethod() == 'GET'){
-            return $this->render('admin/Auth/editPassword.html.twig');
+            return $this->render('admin/auth/editPassword.html.twig');
         }else{
             $old_password = $request->get('oldPassword');
             $new_password = $request->get('newPassword');

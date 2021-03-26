@@ -129,7 +129,7 @@ class AdminManageController extends SystemBaseController
             return $this->render('admin/index.html.twig');
         }
 
-        return $this->render('admin/Auth/login.html.twig');
+        return $this->render('admin/auth/login.html.twig');
     }
 
     /**
