@@ -23,7 +23,7 @@ use PHPZlc\PHPZlc\Responses\Responses;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdminManageController extends SystemBaseController
+class AdminController extends SystemBaseController
 {
     /**
      * 管理策略
@@ -71,9 +71,9 @@ class AdminManageController extends SystemBaseController
         //设置管理端基本信息(名称,页面标记,菜单......)
         $this->adminStrategy
             ->setTitle('Admin')
-            ->setEntranceUrl($this->generateUrl('admin_manage_index'))
-            ->setEndUrl($this->generateUrl('admin_manage_logout'))
-            ->setSettingPwdUrl($this->generateUrl('admin_manage_edit_password'))
+            ->setEntranceUrl($this->generateUrl('admin_index'))
+            ->setEndUrl($this->generateUrl('admin_logout'))
+            ->setSettingPwdUrl($this->generateUrl('admin_edit_password'))
             ->setMenuModel(AdminStrategy::menu_model_simple)
             ->setPageTag($this->page_tag)
             ->setMenus($menus);
