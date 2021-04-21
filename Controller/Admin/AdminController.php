@@ -19,6 +19,7 @@ use PHPZlc\Admin\Strategy\AdminStrategy;
 use PHPZlc\Admin\Strategy\Menu;
 use PHPZlc\PHPZlc\Abnormal\Errors;
 use PHPZlc\PHPZlc\Bundle\Controller\SystemBaseController;
+use PHPZlc\PHPZlc\Doctrine\ORM\Rule\Rule;
 use PHPZlc\PHPZlc\Responses\Responses;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,7 +54,7 @@ class AdminController extends SystemBaseController
      */
     protected $page_tag;
 
-    public function inlet($returnType = SystemBaseController::RETURN_HIDE_RESOURCE, $isLogin = true)
+    public function inlet($returnType = SystemBaseController::RETURN_SHOW_RESOURCE, $isLogin = true)
     {
         PlatformClass::setPlatform($this->getParameter('platform_admin'));
 
@@ -61,8 +62,8 @@ class AdminController extends SystemBaseController
 
         //菜单
         $menus = [
-            new Menu('PHPZlc', null, null, null, null, [
-                new Menu('PHPZlc首页', null, null, null, null)
+            new Menu('首页', null, null, null, null, [
+                new Menu('首页', null, null, null, null)
             ])
         ];
 
@@ -92,7 +93,7 @@ class AdminController extends SystemBaseController
 
             if($userAuth === false){
                 if(self::getReturnType() === SystemBaseController::RETURN_HIDE_RESOURCE){
-                    return Responses::error(Errors::getError(), -1, ['go_url' => $this->adminStrategy->getEntranceUrl()]);
+                    return Responses::error(Errors::getError()->msg, -1, ['go_url' => $this->adminStrategy->getEntranceUrl()]);
                 }else{
                     return $this->redirect($this->adminStrategy->getEntranceUrl());
                 }
@@ -128,7 +129,33 @@ class AdminController extends SystemBaseController
             return $this->render('admin/index.html.twig');
         }
 
-        return $this->render('admin/Auth/login.html.twig');
+        return $this->render('admin/auth/login.html.twig');
+    }
+
+    /**
+     * 时间段筛选
+     *
+     * @param $at
+     * @param $field
+     * @return array
+     */
+    private function atSearch($at, $field)
+    {
+        $rules = [];
+
+        if(!empty($at) && $at != 'null'){
+            $at = explode(',', $at);
+
+            if(array_key_exists(0, $at)){
+                $rules[$field . Rule::RA_CONTRAST] = ['>=', $at[0]];
+            }
+
+            if(array_key_exists(1, $at)){
+                $rules[$field . Rule::RA_CONTRAST_2] = ['<=', $at[1]];
+            }
+        }
+
+        return $rules;
     }
 
 }

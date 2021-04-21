@@ -12,6 +12,7 @@ namespace App\Controller\Admin;
 
 use App\Business\AuthBusiness\AuthTag;
 use App\Business\AuthBusiness\UserAuthBusiness;
+use App\Business\CaptchaBusiness\CaptchaBusiness;
 use PHPZlc\Admin\Strategy\Navigation;
 use PHPZlc\PHPZlc\Abnormal\Errors;
 use PHPZlc\PHPZlc\Responses\Responses;
@@ -43,6 +44,14 @@ class AuthController extends AdminController
 
         $account = $request->get('account');
         $password = $request->get('password');
+
+        $ca = new CaptchaBusiness($this->container);
+
+        if($_ENV['ADMIN_ENV'] !== 'dev') {
+            if (!$ca->isCaptcha('admin_login', $request->get('imgCode'))) {
+                return Responses::error(Errors::getError());
+            }
+        }
 
         if($userBusiness->accountLogin($account, $password, $this->getParameter('subject_admin')) === false){
             return Responses::error(Errors::getError());
@@ -87,7 +96,7 @@ class AuthController extends AdminController
         $this->adminStrategy->setNavigations([new Navigation('修改密码')]);
 
         if($request->getMethod() == 'GET'){
-            return $this->render('admin/Auth/editPassword.html.twig');
+            return $this->render('admin/auth/editPassword.html.twig');
         }else{
             $old_password = $request->get('oldPassword');
             $new_password = $request->get('newPassword');

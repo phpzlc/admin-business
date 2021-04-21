@@ -5,7 +5,7 @@
     <div class="login-page" id="login">
         <div class="login-content">
             <div class="pull-left login-left">
-                <img src="{{ asset(admin_login_lack_ground_img()) }}" alt="">
+                <img src="{{ admin_logo() }}" alt="">
                 <p class="login-title">{{ admin_title() }}</p>
                 <div class="login-copy">
                     ©{{ "now" | date('Y') }} abcdefg
@@ -19,13 +19,15 @@
                     </el-input>
                     <el-input type="password" placeholder="请输入密码" v-model="password" clearable class="login-input">
                     </el-input>
-                    {#                    <div class="img-code-content clearfix">#}
-                    {#                        <el-input placeholder="图形验证码" v-model="imgCode" clearable class="login-input">#}
-                    {#                        </el-input>#}
-                    {#                                            <span class="login-img" >#}
-                    {#                        <img id="img" @click="captcha()" class="login-img" width="130px" height="48px" >#}
-                    {#                                            </span>#}
-                    {#                    </div>#}
+                    {% if admin_env() != 'dev' %}
+                        <div class="img-code-content clearfix">
+                            <el-input placeholder="图形验证码" v-model="imgCode" clearable class="login-input">
+                            </el-input>
+                            <span class="login-img" >
+                            <img id="img" @click="captcha()" class="login-img" width="130px" height="48px" >
+                        </span>
+                        </div>
+                    {% endif %}
                     <el-button type="primary" class="login-btn" @click="loginBtn()">登录</el-button>
                 </div>
             </div>
@@ -45,7 +47,7 @@
             },
 
             mounted() {
-                // this.captcha();
+                this.captcha();
             },
 
             created() {
@@ -64,8 +66,9 @@
 
                     let validated = that._validate();
                     if (validated.success) {
-                        $.post("{{ path('admin_manage_login') }}", {account: that.account, password:that.password}, function(data) {
+                        $.post("{{ path('admin_manage_login') }}", {account: that.account, password:that.password, imgCode: that.imgCode}, function(data) {
                             resultPreprocess(that, data, '', '')
+                            that.captcha();
                         }, )
                     } else {
                         this.$message.error(validated.msg);
@@ -88,24 +91,25 @@
                             msg: '请输入密码'
                         }
                     }
-                    // if (!this.imgCode) {
-                    //     return {
-                    //         success: false,
-                    //         msg: '请输入验证码'
-                    //     }
-                    // }
-
+                    {% if admin_env() != 'dev' %}
+                    if (!this.imgCode) {
+                        return {
+                            success: false,
+                            msg: '请输入验证码'
+                        }
+                    }
+                    {% endif %}
                     return {
                         success: true
                     };
                 },
 
-                {#captcha() {#}
-                {#    let that = this;#}
-                {#    $.post("{{ path('public_captcha') }}", {captcha: 'admin_login', format:'base64'}, function(res) {#}
-                {#        document.getElementById('img').src = res;#}
-                {#    }, )#}
-                {#}#}
+                captcha() {
+                    let that = this;
+                    $.post("{{ path('captcha_generate') }}", {captcha: 'admin_login', format:'base64'}, function(res) {
+                        document.getElementById('img').src = res;
+                    }, )
+                }
 
             }
         })
