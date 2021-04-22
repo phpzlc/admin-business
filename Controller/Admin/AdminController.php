@@ -13,6 +13,8 @@ namespace App\Controller\Admin;
 use App\Business\AuthBusiness\CurAuthSubject;
 use App\Business\AuthBusiness\UserAuthBusiness;
 use App\Business\PlatformBusiness\PlatformClass;
+use App\Business\RBACBusiness\PermissionBusiness;
+use App\Business\RBACBusiness\RBACBusiness;
 use App\Entity\UserAuth;
 use App\Repository\AdminRepository;
 use PHPZlc\Admin\Strategy\AdminStrategy;
@@ -21,6 +23,7 @@ use PHPZlc\PHPZlc\Abnormal\Errors;
 use PHPZlc\PHPZlc\Bundle\Controller\SystemBaseController;
 use PHPZlc\PHPZlc\Doctrine\ORM\Rule\Rule;
 use PHPZlc\PHPZlc\Responses\Responses;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -54,16 +57,27 @@ class AdminController extends SystemBaseController
      */
     protected $page_tag;
 
+    /**
+     * 鉴权类
+     *
+     * @var RBACBusiness
+     */
+    protected $rbac;
+
     public function inlet($returnType = SystemBaseController::RETURN_SHOW_RESOURCE, $isLogin = true)
     {
         PlatformClass::setPlatform($this->getParameter('platform_admin'));
 
+        $this->rbac = new RBACBusiness($this->container, PlatformClass::getPlatform());
         $this->adminRepository = $this->getDoctrine()->getRepository('App:Admin');
 
         //菜单
         $menus = [
             new Menu('首页', null, null, null, null, [
-                new Menu('首页', null, null, null, null)
+                new Menu('首页', null, null, null, null),
+                new Menu('系统设置', null, null, null, null, [
+                    new Menu('角色与权限', null, 'admin_rbac', $this->generateUrl('admin_rbac_role')),
+                ])
             ])
         ];
 
@@ -75,6 +89,7 @@ class AdminController extends SystemBaseController
             ->setEntranceUrl($this->generateUrl('admin_auth_index'))
             ->setEndUrl($this->generateUrl('admin_auth_logout'))
             ->setSettingPwdUrl($this->generateUrl('admin_auth_edit_password'))
+            ->setClearCacheApiUrl($this->generateUrl('admin_clear_cache'))
             ->setMenuModel(AdminStrategy::menu_model_simple)
             ->setPageTag($this->page_tag)
             ->setMenus($menus);
@@ -102,11 +117,19 @@ class AdminController extends SystemBaseController
             $this->adminStrategy->setAdminName(CurAuthSubject::getCurUser()->getAccount());
             $this->adminStrategy->setAdminRoleName(CurAuthSubject::getCurUser()->getName());
 
+            $this->rbac->setIsSuper(CurAuthSubject::getCurUser()->getIsSuper());
 
             //对路由进行权限校验
-
+            if(!$this->rbac->canRoute($this->get('request_stack')->getCurrentRequest()->get('_route'))){
+                if(self::getReturnType() == SystemBaseController::RETURN_HIDE_RESOURCE){
+                    return Responses::error('权限不足');
+                }else{
+                    return $this->render('@PHPZlcAdmin/page/no_permission.html.twig');
+                }
+            }
 
             //对菜单进行权限筛选
+            $this->adminStrategy->setMenus($this->rbac->menusFilter($this->adminStrategy->getMenus()));
         }
 
         return true;
@@ -133,13 +156,40 @@ class AdminController extends SystemBaseController
     }
 
     /**
+     * 清除缓存
+     *
+     * @return bool|JsonResponse|RedirectResponse|Response
+     */
+    public function clearCache()
+    {
+        $r = $this->inlet();
+        if($r !== true){
+            return $r;
+        }
+
+        //权限部分缓存清除
+
+        //1. 更新权限列表
+        (new PermissionBusiness($this->container))->builtUpdatePermission();
+
+        //2. 清除当前登录用户权限缓存
+        $this->get('session')->remove(($this->rbac->getCacheSessionName()));
+
+        if(Errors::isExistError()){
+            return Responses::error(Errors::getError());
+        }
+
+        return Responses::success('缓存清除成功');
+    }
+
+    /**
      * 时间段筛选
      *
      * @param $at
      * @param $field
      * @return array
      */
-    private function atSearch($at, $field)
+    public function atSearch($at, $field)
     {
         $rules = [];
 

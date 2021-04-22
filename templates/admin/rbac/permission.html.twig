@@ -1,0 +1,120 @@
+{% extends '@PHPZlcAdmin/page/index.html.twig' %}
+
+{% block hend %}
+    <style type="text/css">
+        .el-transfer-panel{
+            width: 400px;
+        }
+        .el-transfer__button:first-child {
+            margin-bottom: 10px;
+            margin-right: 12px;
+        }
+    </style>
+{% endblock %}
+
+{% block main_content %}
+    <div class="add-page clearfix">
+        <el-transfer
+                v-model="roleValue"
+                :data="roleData"
+                :titles="['未包含角色', '已包含角色']"
+                @change="transferSelChangeRole"
+        >
+        </el-transfer>
+
+        <el-divider></el-divider>
+
+        <el-transfer
+                style="width: 100%"
+                v-model="permissionValue"
+                :data="permissionData"
+                :titles="['未包含权限', '已包含权限']"
+                @change="transferSelChangePermission"
+        >
+        </el-transfer>
+
+        <el-divider></el-divider>
+        <div>
+            <el-button @click="resetForm()" size="mini">返回</el-button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block main_content_vue %}
+    <script>
+        new Vue({
+            el: '#main-content',
+            data: function () {
+                return {
+                    ruleForm: {
+                    },
+                    roleData: [
+                        {% for role in roles %}
+                        {
+                            key: "{{ role.id }}",
+                            label: "{{ role.tag }}-{{ role.name }}",
+                        },
+                        {% endfor %}
+                    ],
+                    roleValue: [
+                        {% for role_id in role.containRoleIds %}
+                        "{{ role_id }}",
+                        {% endfor %}
+                    ],
+                    permissionData: [
+                        {% for permission in permissions %}
+                        {
+                            key: "{{ permission.id }}",
+                            label: "{{ permission.tag }}-{{ permission.description }}",
+                        },
+                        {% endfor %}
+                    ],
+                    permissionValue: [
+                        {% for permission_id in role.permissionIds %}
+                        "{{ permission_id }}",
+                        {% endfor %}
+                    ]
+                }
+            },
+            created() {
+                // // 页面初始化使用
+                // console.log(1);
+            },
+
+            mounted() {
+            },
+            methods: {
+                submitForm(formName) {
+                },
+                resetForm() {
+                    window.location.href ="{{ admin_url_anchor() }}";
+                },
+                transferSelChangeRole(value, direction, movedKeys) {
+                    const that = this;
+                    if(direction == 'left') {
+                        $.post("{{ path('admin_rbac_remove_role') }}?role_id={{ role.id }}", {
+                            'c_role_ids': movedKeys
+                        } , function (result) {});
+                    }else{
+                        $.post("{{ path('admin_rbac_add_role') }}?role_id={{ role.id }}", {
+                            'c_role_ids': movedKeys
+                        } , function (result) {});
+                    }
+                },
+                transferSelChangePermission(value, direction, movedKeys) {
+                    const that = this;
+                    if(direction == 'left') {
+                        $.post("{{ path('admin_rbac_remove_permission') }}?role_id={{ role.id }}", {
+                            'permission_ids': movedKeys
+                        } , function (result) {});
+                    }else{
+                        $.post("{{ path('admin_rbac_add_permission') }}?role_id={{ role.id }}", {
+                            'permission_ids': movedKeys
+                        } , function (result) {});
+                    }
+                }
+            }
+        })
+    </script>
+
+{% endblock %}

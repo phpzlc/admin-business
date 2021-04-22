@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
-
 class AuthController extends AdminController
 {
 
@@ -75,6 +74,9 @@ class AuthController extends AdminController
         }
 
         AuthTag::remove($this->container);
+
+        //清除当前登录用户权限缓存
+        $this->get('session')->remove(($this->rbac->getCacheSessionName()));
 
         return $this->redirect($this->adminStrategy->getEntranceUrl());
     }
