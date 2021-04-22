@@ -1,4 +1,4 @@
-# 管理端-首页
+# 首页
 admin_index:
   path:   /
   controller: App\Controller\Admin\AdminController:index
@@ -8,12 +8,12 @@ admin_clear_cache:
   path: /clear-cache
   controller: App\Controller\Admin\AdminController:clearCache
 
-# 管理端-登录
+# 登录
 admin_auth:
   prefix: /auth
   resource: 'auth.yaml'
 
-# 管理端-权限
+# 权限
 admin_rbac:
   prefix: /rbac
   resource: 'rbac.yaml'

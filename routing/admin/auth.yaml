@@ -1,14 +1,14 @@
-# 管理端-登录
+# 登录
 admin_auth_login:
   path:   /login
   controller: App\Controller\Admin\AuthController:login
 
-# 管理端-退出登录
+# 退出登录
 admin_auth_logout:
   path:   /logout
   controller: App\Controller\Admin\AuthController:logout
 
-# 管理端-修改密码
+# 修改密码
 admin_auth_edit_password:
   path:   /edit-password
   controller: App\Controller\Admin\AuthController:editPassword
