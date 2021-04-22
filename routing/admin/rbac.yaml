@@ -1,0 +1,39 @@
+# 角色列表
+admin_rbac_role:
+  path:   /
+  controller: App\Controller\Admin\RBACController:roleIndex
+
+# 新建/编辑角色
+admin_rbac_role_edit:
+  path:   /edit
+  controller: App\Controller\Admin\RBACController:role
+
+# 角色设置权限
+admin_rbac_role_permission:
+  path:   /permission
+  controller: App\Controller\Admin\RBACController:rolePermission
+
+# 删除角色
+admin_rbac_role_del:
+  path:   /del
+  controller: App\Controller\Admin\RBACController:delRole
+
+# 添加角色权限
+admin_rbac_add_permission:
+  path:   /add-permission
+  controller: App\Controller\Admin\RBACController:addPermissionToRole
+
+# 移除角色权限
+admin_rbac_remove_permission:
+  path:   /remove-permission
+  controller: App\Controller\Admin\RBACController:removePermissionToRole
+
+# 添加角色
+admin_rbac_add_role:
+  path:   /add-role
+  controller: App\Controller\Admin\RBACController:addRoleToRole
+
+# 移除角色
+admin_rbac_remove_role:
+  path:   /remove-role
+  controller: App\Controller\Admin\RBACController:removeRoleToRole
