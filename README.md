@@ -4,6 +4,12 @@
 composer require phpzlc/admin-business 
 ```
 
+## 后台超级管理员账号密码
+
+```text
+aitime 123456
+```
+
 ## 配置
 
 在项目根路由中`config/routes.yaml`引入
