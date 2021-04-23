@@ -87,7 +87,7 @@ class AdminController extends SystemBaseController
         //设置管理端基本信息(名称,页面标记,菜单......)
         $this->adminStrategy
             ->setTitle('Admin')
-            ->setEntranceUrl($this->generateUrl('admin_auth_index'))
+            ->setEntranceUrl($this->generateUrl('admin_index'))
             ->setEndUrl($this->generateUrl('admin_auth_logout'))
             ->setSettingPwdUrl($this->generateUrl('admin_auth_edit_password'))
             ->setClearCacheApiUrl($this->generateUrl('admin_clear_cache'))
