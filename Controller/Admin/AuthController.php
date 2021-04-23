@@ -19,7 +19,6 @@ use PHPZlc\PHPZlc\Responses\Responses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends AdminController
@@ -30,7 +29,7 @@ class AuthController extends AdminController
      *
      * @param Request $request
      * @return bool|JsonResponse|RedirectResponse
-     * @throws Exception
+     * @throws \Exception
      */
     public function login(Request $request)
     {
@@ -64,7 +63,7 @@ class AuthController extends AdminController
      * 管理端退出登录
      *
      * @return false|RedirectResponse
-     * @throws Exception
+     * @throws \Exception
      */
     public function logout()
     {
@@ -86,7 +85,7 @@ class AuthController extends AdminController
      *
      * @param Request $request
      * @return bool|JsonResponse|RedirectResponse|Response
-     * @throws Exception
+     * @throws \Exception
      */
     public function editPassword(Request $request)
     {

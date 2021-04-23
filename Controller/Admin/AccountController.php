@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class AccountController extends AdminManageController
+class AccountController extends AdminController
 {
     /**
      * @var AdminAuth
