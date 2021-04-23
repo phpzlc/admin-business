@@ -13,7 +13,18 @@ admin_auth:
   prefix: /auth
   resource: 'auth.yaml'
 
+# 账号
+admin_account:
+  prefix: /account
+  resource: 'account.yaml'
+  options:
+    permission_tag: account
+    permission_description: 账号与权限
+
 # 权限
 admin_rbac:
   prefix: /rbac
   resource: 'rbac.yaml'
+  options:
+    permission_tag: rbac
+    permission_description: 角色与权限

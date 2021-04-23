@@ -1,0 +1,85 @@
+{% extends '@PHPZlcAdmin/page/index.html.twig' %}
+
+{% block hend %}
+<style type="text/css">
+    .el-transfer-panel{
+        width: 400px;
+    }
+    .el-transfer__button:first-child {
+        margin-bottom: 10px;
+        margin-right: 12px;
+    }
+</style>
+{% endblock %}
+
+{% block main_content %}
+    <div class="add-page clearfix">
+            <el-transfer
+                    style="width: 100%"
+                    v-model="value"
+                    :data="data"
+                    :titles="['未拥有角色', '已拥有角色']"
+                    @change="transferSelChange"
+            >
+            </el-transfer>
+
+        <el-divider></el-divider>
+        <div>
+            <el-button @click="resetForm()" size="mini">返回</el-button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block main_content_vue %}
+    <script>
+        new Vue({
+            el: '#main-content',
+            data: function () {
+                return {
+                    ruleForm: {
+                    },
+                    data: [
+                        {% for role in roles %}
+                        {
+                            key: "{{ role.id }}",
+                            label: "{{ role.tag }}-{{ role.name }}",
+                        },
+                        {% endfor %}
+                    ],
+                    value: [
+                        {% for role in adminRoles %}
+                            "{{ role.role.id }}",
+                        {% endfor %}
+                    ]
+                }
+            },
+            created() {
+                // // 页面初始化使用
+                // console.log(1);
+            },
+
+            mounted() {
+            },
+            methods: {
+                submitForm(formName) {
+                },
+                resetForm() {
+                    window.location.href ="{{ admin_url_anchor() }}";
+                },
+                transferSelChange(value, direction, movedKeys) {
+                    const that = this;
+                    if(direction == 'left') {
+                        $.post("{{ path('admin_account_remove_role') }}?admin_user_auth_id={{ admin.userAuth.id }}", {
+                            'role_ids': movedKeys
+                        } , function (result) {});
+                    }else{
+                        $.post("{{ path('admin_account_add_role') }}?admin_user_auth_id={{ admin.userAuth.id }}", {
+                            'role_ids': movedKeys
+                        } , function (result) {});
+                    }
+                }
+            }
+        })
+    </script>
+
+{% endblock %}

@@ -76,6 +76,7 @@ class AdminController extends SystemBaseController
             new Menu('首页', null, null, null, null, [
                 new Menu('首页', null, null, null, null),
                 new Menu('系统设置', null, null, null, null, [
+                    new Menu('账号与角色', null, 'admin_account', $this->generateUrl('admin_account_index')),
                     new Menu('角色与权限', null, 'admin_rbac', $this->generateUrl('admin_rbac_role')),
                 ])
             ])

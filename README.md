@@ -18,6 +18,8 @@ aitime 123456
 admin:
   resource: "routing/admin/admin.yaml"
   prefix:   /admin
+  options:
+    platform: admin
 
 upload:
   resource: "routing/upload/upload.yaml"
