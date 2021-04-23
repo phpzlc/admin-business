@@ -162,11 +162,14 @@ sudo chmod -R 777 public/upload/
 文件位置: `src/Business/AuthBusiness/UserAuthBusiness.php`
 
 ```php
+
+    use App\Business\AdminBusiness\AdminAuth;
+
     /**
      * 获取指定平台端方法
      *
      * @param $subject_type
-     * @return AdminAuth|mixed
+     * @return SubjectAuthInterface
      * @throws Exception
      */
     private function getUserAuthService($subject_type)
