@@ -150,7 +150,6 @@ class RBACController extends AdminController
      */
     public function rolePermission(Request $request)
     {
-        (new PermissionBusiness($this->container))->builtUpdatePermission();
         $r = $this->inlet(self::RETURN_SHOW_RESOURCE);
         if($r !== true){
             return $r;
