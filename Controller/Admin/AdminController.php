@@ -71,12 +71,19 @@ class AdminController extends SystemBaseController
 
         //设置管理端基本信息(名称,页面标记,菜单......)
         $this->adminStrategy
+            // 设置后台标题
             ->setTitle('Admin')
+            // 设置后台入口URL
             ->setEntranceUrl($this->generateUrl('admin_index'))
+            // 设置后台出口URL
             ->setEndUrl($this->generateUrl('admin_logout'))
+            // 设置修改密码URL
             ->setSettingPwdUrl($this->generateUrl('admin_edit_password'))
+            // 设置后台页面模式
             ->setMenuModel(AdminStrategy::menu_model_simple)
+            // 设置页面标记
             ->setPageTag($this->page_tag)
+            // 设置后台导航菜单
             ->setMenus($menus);
 
         $r = parent::inlet($returnType, $isLogin);
@@ -104,9 +111,17 @@ class AdminController extends SystemBaseController
 
 
             //对路由进行权限校验
-
+            if(!$this->rbac->canRoute($this->get('request_stack')->getCurrentRequest()->get('_route'))){
+                if(self::getReturnType() == SystemBaseController::RETURN_HIDE_RESOURCE){
+                    return Responses::error('权限不足');
+                }else{
+                    return $this->render('@PHPZlcAdmin/page/no_permission.html.twig');
+                }
+            }
 
             //对菜单进行权限筛选
+            $this->adminStrategy->setMenus($this->rbac->menusFilter($this->adminStrategy->getMenus()));
+
         }
 
         return true;
