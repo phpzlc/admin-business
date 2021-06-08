@@ -4,6 +4,12 @@
 composer require phpzlc/admin-business 
 ```
 
+## 后台超级管理员账号密码
+
+```text
+aitime 123456
+```
+
 ## 配置
 
 在项目根路由中`config/routes.yaml`引入
@@ -12,6 +18,8 @@ composer require phpzlc/admin-business
 admin:
   resource: "routing/admin/admin.yaml"
   prefix:   /admin
+  options:
+    platform: admin
 
 upload:
   resource: "routing/upload/upload.yaml"
@@ -154,11 +162,14 @@ sudo chmod -R 777 public/upload/
 文件位置: `src/Business/AuthBusiness/UserAuthBusiness.php`
 
 ```php
+
+    use App\Business\AdminBusiness\AdminAuth;
+
     /**
      * 获取指定平台端方法
      *
      * @param $subject_type
-     * @return AdminAuth|mixed
+     * @return SubjectAuthInterface
      * @throws Exception
      */
     private function getUserAuthService($subject_type)
@@ -167,8 +178,7 @@ sudo chmod -R 777 public/upload/
             switch ($subject_type){
                 case $this->getParameter('subject_admin'):
                     $this->subjectAuthCaches[$subject_type] = new AdminAuth($this->container);
-                    break;
-                    
+                    break;                   
                 default:
                     throw new \Exception('授权登录权限不存在');
             }

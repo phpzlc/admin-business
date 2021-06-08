@@ -1,0 +1,144 @@
+{% extends '@PHPZlcAdmin/page/index.html.twig' %}
+
+{% block main_content %}
+    <div class="add-page clearfix">
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" label-position="left"
+                 class="form-content">
+            <el-form-item label="管理员名称:" prop="name" size="mini" class="el-form-width-all">
+                <el-input v-model="ruleForm.name" placeholder="请输入管理员名称"></el-input>
+            </el-form-item>
+
+            <el-form-item label="管理员账号:" prop="account" size="mini" class="el-form-width-all">
+                <el-input v-model="ruleForm.account" placeholder="请输入管理员账号"></el-input>
+            </el-form-item>
+
+            <el-form-item label="是否禁用:" prop="isDisable" size="mini" class="el-form-width-all">
+                <el-select v-model="ruleForm.isDisable">
+                    <el-option
+                            v-for="item in isDisableSel"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="密码:" prop="password" size="mini" class="el-form-width-all">
+                <el-input v-model="ruleForm.password" type="password" placeholder="{% if admin.id == '' %}请输入密码{% else %}不填写则不对密码进行变更{% endif %}"></el-input>
+            </el-form-item>
+
+            <el-form-item label="确认密码:" prop="verify_password" size="mini" class="el-form-width-all">
+                <el-input v-model="ruleForm.verify_password" type="password" placeholder="{% if admin.id == '' %}请输入确认密码{% else %}不填写则不对密码进行变更{% endif %}"></el-input>
+            </el-form-item>
+
+            <el-form-item size="mini">
+                <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                <el-button @click="resetForm()">取消</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+{% endblock %}
+
+{% block main_content_vue %}
+    {#{{ dump() }}#}
+    <script>
+        new Vue({
+            el: '#main-content',
+            data: function () {
+
+                var validatePass2 = (rule, value, callback) => {
+                    if (value === '') {
+                        callback(new Error('请再次输入密码'));
+                    } else if (value !== this.ruleForm.password) {
+                        callback(new Error('两次输入密码不一致!'));
+                    } else {
+                        callback();
+                    }
+                };
+
+                var checkPassword = (rule, value, callback) => {
+
+                    var Expression = /^[a-zA-Z0-9]{6,18}$/;
+                    var objExp = new RegExp(Expression);
+
+                    if(objExp.test(this.ruleForm.password) != true){
+
+                        callback(new Error('密码必须为6-18位数字与字母组合'))
+
+                    }else {
+                        callback();
+                    }
+                };
+
+                return {
+                    ruleForm: {
+                        admin_id: '{{ admin.id }}',
+                        name: '{{ admin.name }}',
+                        account: '{{ admin.account }}',
+                        isDisable: {{ admin.isDisable | boolToInt }},
+                        password: '',
+                        verify_password: ''
+                    },
+                    rules: {
+                        name: [
+                            { required: true, message: '请输入管理员名称', trigger: 'blur' },
+                        ],
+                        account: [
+                            { required: true, message: '请输入管理员帐号', trigger: 'blur'},
+                        ],
+                        isDisable: [
+                            { required: true, message: '是否禁用', trigger: 'blur'},
+                        ],
+
+                        {% if admin.id == '' %}
+                        password: [
+                            { required: true, message: '请输入密码', trigger: 'blur'},
+                            {  validator: checkPassword, trigger: 'blur'},
+                        ],
+                        verify_password: [
+                            { required: true, message: '请输入确认密码', trigger: 'blur'},
+                            {  validator: validatePass2, trigger: 'blur' }
+                        ]
+                        {% endif %}
+                    },
+                    isDisableSel: [
+                        {
+                            value: 1,
+                            label: '是'
+                        },
+                        {
+                            value: 0,
+                            label: '否'
+                        }
+                    ]
+                }
+            },
+            created() {
+                // // 页面初始化使用
+                // console.log(1);
+            },
+
+            mounted() {
+            },
+            methods: {
+                submitForm(formName) {
+                    const that = this;
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            $.post("{{ path('admin_account_admin') }}", that.ruleForm, function (result) {
+                                resultPreprocess(that, result,"{{ admin_url_anchor() }}")
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm() {
+                    window.location.href ="{{ admin_url_anchor() }}";
+                }
+            }
+        })
+    </script>
+
+{% endblock %}

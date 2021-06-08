@@ -1,0 +1,103 @@
+{% extends '@PHPZlcAdmin/page/index.html.twig' %}
+
+{% block main_content %}
+
+    <div class="search-page clearfix" >
+        <el-row class="list-btn-content mt-10">
+            <el-button size="mini" type="primary" @click="handleCreate">新建</el-button>
+        </el-row>
+
+        <el-table :data="listData" style="width: 100%" border class="mt-10">
+            <el-table-column prop="account" label="管理员账号" ></el-table-column>
+            <el-table-column prop="name" label="管理员名称" ></el-table-column>
+            <el-table-column prop="isDisableString" label="是否禁用" ></el-table-column>
+            <el-table-column prop="roleString" label="角色" ></el-table-column>
+
+            <el-table-column fixed="right" prop="date" label="操作" width="400">
+                <template slot-scope="scope">
+                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" v-if="!scope.row.isBuilt">编辑</el-button>
+                    <el-button size="mini" type="danger" @click="handleDel(scope.$index, scope.row)" v-if="!scope.row.isBuilt && !scope.row.isSuper">删除</el-button>
+                    <el-button size="mini" @click="handleRole(scope.$index, scope.row)"  v-if="!scope.row.isSuper">设置角色</el-button>
+                </template>
+            </el-table-column>
+
+        </el-table>
+    </div>
+{% endblock %}
+
+{% block main_content_vue %}
+    <script>
+        new Vue({
+            el: '#main-content',
+            // delimiters: ['${', '}$'],
+            data: function () {
+                return {
+                    searchForm: {
+                    },
+                    listData: [
+                        {% for admin in admins %}
+                        {
+                            id: "{{ admin.id }}",
+                            name: "{{ admin.name }}",
+                            account: "{{ admin.account }}",
+                            isBuilt: "{{ admin.isBuilt }}",
+                            isDisable: "{{ admin.isDisable  }}",
+                            isDisableString: "{{ admin.isDisable | boolToString }}",
+                            isSuper: "{{ admin.isSuper }}",
+                            roleString: "{{ admin.roleString }}"
+                        },
+                        {% endfor %}
+                    ]
+                }
+            },
+            created() {
+                // 页面初始化使用
+                // console.log(1);
+            },
+            methods: {
+
+                // 搜索按钮
+                searchBtn() {
+                    window.location.href = splicingGetParamsToUrl("{{ path('admin_account_index') }}", this.searchForm);
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                },
+                handleRole(index, row) {
+                    window.location = '{{ path('admin_account_role') }}?admin_id='+row.id+'';
+                },
+                handleEdit(index, row) {
+                    window.location = '{{ path('admin_account_admin') }}?admin_id='+row.id+'';
+                },
+                handleDel(index, row) {
+                    this.$confirm('此操作将永久删除该账号, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        const that = this;
+                        $.post("{{ path('admin_account_del') }}", {"admin_id": row.id}, function(data) {
+                            resultPreprocess(that, data,'','')
+                        }, )
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                },
+                handleCreate() {
+                    window.location = "{{ path('admin_account_admin') }}";
+                },
+                handleCurrentChange(val) {
+                    window.location.href = urlParamWrite(getSelfUrl(), 'page', val);
+                },
+                handleSizeChange(val) {
+                    window.location.href = urlParamWrite(getSelfUrl(), 'rows', val);
+                }
+            }
+        })
+    </script>
+
+
+{% endblock %}

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AdminRepository;
 use Doctrine\ORM\Mapping as ORM;
+use PHPZlc\PHPZlc\Doctrine\ORM\Mapping\OuterColumn;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Business\AuthBusiness\UserInterface;
 
@@ -91,6 +92,11 @@ class Admin implements UserInterface
      * @ORM\Column(name="is_super", type="boolean", options={"comment":"是否超级管理员", "default":"0"})
      */
     private $isSuper = false;
+
+    /**
+     * @OuterColumn(name="role_string", type="string", sql="(IF(sql_pre.is_super = 1,'超级管理员', (select GROUP_CONCAT(r.name) from role r where id in (select role_id from user_auth_role uar where uar.user_auth_id = sql_pre.user_auth_id))))", options={"comment":"角色"})
+     */
+    private $roleString;
 
     public function getId(): ?string
     {
@@ -205,4 +211,8 @@ class Admin implements UserInterface
         return $this;
     }
 
+    public function getRoleString(): ?string
+    {
+        return $this->roleString;
+    }
 }

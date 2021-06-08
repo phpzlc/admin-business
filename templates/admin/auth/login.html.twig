@@ -66,7 +66,7 @@
 
                     let validated = that._validate();
                     if (validated.success) {
-                        $.post("{{ path('admin_manage_login') }}", {account: that.account, password:that.password, imgCode: that.imgCode}, function(data) {
+                        $.post("{{ path('admin_auth_login') }}", {account: that.account, password:that.password, imgCode: that.imgCode}, function(data) {
                             resultPreprocess(that, data, '', '')
                             that.captcha();
                         }, )
@@ -106,7 +106,7 @@
 
                 captcha() {
                     let that = this;
-                    $.post("{{ path('captcha_generate') }}", {captcha: 'admin_login', format:'base64'}, function(res) {
+                    $.post("{{ path('captcha_generate') }}", {captcha: 'admin_auth_login', format:'base64'}, function(res) {
                         document.getElementById('img').src = res;
                     }, )
                 }

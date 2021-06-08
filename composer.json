@@ -26,7 +26,8 @@
       "phpzlc/admin": "1.*",
       "phpzlc/auth-business": "1.*",
       "phpzlc/upload-business": "1.*",
-      "phpzlc/captcha-business": "1.*"
+      "phpzlc/captcha-business": "1.*",
+      "phpzlc/rbac-business": "1.*"
     }
 
 }

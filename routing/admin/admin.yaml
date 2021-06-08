@@ -1,19 +1,30 @@
-# 管理端-首页
+# 首页
 admin_index:
   path:   /
   controller: App\Controller\Admin\AdminController:index
 
-# 管理端-登录
-admin_login:
-  path:   /login
-  controller: App\Controller\Admin\AuthController:login
+# 清除缓存
+admin_clear_cache:
+  path: /clear-cache
+  controller: App\Controller\Admin\AdminController:clearCache
 
-# 管理端-退出登录
-admin_logout:
-  path:   /logout
-  controller: App\Controller\Admin\AuthController:logout
+# 登录
+admin_auth:
+  prefix: /auth
+  resource: 'auth.yaml'
 
-# 管理端-修改密码
-admin_edit_password:
-  path:   /edit-password
-  controller: App\Controller\Admin\AuthController:editPassword
+# 账号
+admin_account:
+  prefix: /account
+  resource: 'account.yaml'
+  options:
+    permission_tag: account
+    permission_description: 账号与权限
+
+# 权限
+admin_rbac:
+  prefix: /rbac
+  resource: 'rbac.yaml'
+  options:
+    permission_tag: rbac
+    permission_description: 角色与权限
