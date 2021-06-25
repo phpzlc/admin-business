@@ -75,7 +75,7 @@ class AuthController extends AdminController
         AuthTag::remove($this->container);
 
         //清除当前登录用户权限缓存
-        $this->get('session')->remove(($this->rbac->getCacheSessionName()));
+        $this->rbac->clearCache($this->curUserAuth);
 
         return $this->redirect($this->adminStrategy->getEntranceUrl());
     }
