@@ -36,8 +36,10 @@
             <p class="testing-environment" style="right: 0">开发环境</p>
         {% elseif admin_env() == 'beta' %}
             <p class="testing-environment" style="right: 0">测试环境</p>
+        {% elseif admin_env() == 'demo' %}
+            <p class="testing-environment" style="right: 0">样品</p>
         {% elseif admin_env() == 'prod' %}
-            <p class="testing-environment" style="right: 0">正式环境</p>
+
         {% endif %}
     </div>
     <script>
