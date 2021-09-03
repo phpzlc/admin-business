@@ -46,7 +46,7 @@ class AuthController extends AdminController
         $ca = new CaptchaBusiness($this->container);
 
         if($_ENV['ADMIN_ENV'] !== 'dev') {
-            if (!$ca->isCaptcha('admin_login', $request->get('imgCode'))) {
+            if (!$ca->isCaptcha('admin_auth_login', $request->get('imgCode'))) {
                 return Responses::error(Errors::getError());
             }
         }
