@@ -23,11 +23,11 @@
       }
     },
     "require": {
-      "phpzlc/admin": "1.*",
-      "phpzlc/auth-business": "1.*",
-      "phpzlc/upload-business": "1.*",
-      "phpzlc/captcha-business": "1.*",
-      "phpzlc/rbac-business": "1.*"
+      "phpzlc/admin": "2.*",
+      "phpzlc/auth-business": "2.*",
+      "phpzlc/upload-business": "2.*",
+      "phpzlc/captcha-business": "2.*",
+      "phpzlc/rbac-business": "2.*"
     }
 
 }
