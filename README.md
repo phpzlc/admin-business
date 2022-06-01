@@ -4,4 +4,4 @@
 
 ## 使用文档
 
-[使用文档](https://phpzlc.com/doc/module/admin-business)
+[使用文档](https://phpzlc.com/doc/zh-CN/admin-business/v2.0/admin-business)
