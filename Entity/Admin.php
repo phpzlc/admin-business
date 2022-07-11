@@ -54,7 +54,7 @@ class Admin implements UserInterface
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_disable", type="boolean", options={"commnt":"是否禁用", "default":"0"})
+     * @ORM\Column(name="is_disable", type="boolean", options={"comment":"是否禁用", "default":"0"})
      */
     private $isDisable = false;
 
