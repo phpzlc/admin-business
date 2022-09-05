@@ -217,5 +217,16 @@ class AdminController extends SystemBaseController
 
         return $rules;
     }
+    
+    /**
+     * 异常页面
+     * 
+     * @param $message
+     * @return Response
+     */
+    public function ex($message = '')
+    {
+        return $this->render('@PHPZlcAdmin/page/no_permission.html.twig');
+    }
 
 }
