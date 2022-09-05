@@ -67,9 +67,9 @@ class AuthController extends AdminController
      */
     public function logout()
     {
-        $r = $this->inlet(self::RETURN_HIDE_RESOURCE, true);
+        $r = $this->inlet(self::RETURN_SHOW_RESOURCE, true);
         if($r !== true){
-            return false;
+            return $r;
         }
 
         AuthTag::remove($this->container);
