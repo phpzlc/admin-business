@@ -12,6 +12,8 @@ use App\Business\AdminBusiness\AdminAuth;
 use App\Business\PlatformBusiness\PlatformClass;
 use App\Entity\Admin;
 use App\Entity\UserAuthRole;
+use App\Entity\Role;
+use App\Entity\UserAuth;
 use PHPZlc\Admin\Strategy\Navigation;
 use PHPZlc\PHPZlc\Abnormal\Errors;
 use PHPZlc\PHPZlc\Bundle\Controller\SystemBaseController;
@@ -160,8 +162,8 @@ class AccountController extends AdminController
 
         return $this->render('admin/account/role.html.twig', array(
             'admin' => $admin,
-            'roles' => $this->getDoctrine()->getRepository('App:Role')->findAll(['platform' => PlatformClass::getPlatform()]),
-            'adminRoles' => $this->getDoctrine()->getRepository('App:UserAuthRole')->findAll([
+            'roles' => $this->getDoctrine()->getRepository(Role::class)->findAll(['platform' => PlatformClass::getPlatform()]),
+            'adminRoles' => $this->getDoctrine()->getRepository(UserAuthRole::class)->findAll([
                 'role'. Rule::RA_JOIN => [
                     'alias' => 'r'
                 ],
@@ -225,14 +227,14 @@ class AccountController extends AdminController
         $role_ids = $request->get('role_ids');
 
         foreach ($role_ids as $role_id) {
-            $user_auth_role = $this->getDoctrine()->getRepository('App:UserAuthRole')->findAssoc([
+            $user_auth_role = $this->getDoctrine()->getRepository(UserAuthRole::class)->findAssoc([
                 'user_auth_id' => $admin_user_auth_id,
                 'role_id' => $role_id
             ]);
 
             if (empty($user_auth_role)) {
-                $userAuth = $this->getDoctrine()->getRepository('App:UserAuth')->find($admin_user_auth_id);
-                $role = $this->getDoctrine()->getRepository('App:Role')->find($role_id);
+                $userAuth = $this->getDoctrine()->getRepository(UserAuth::class)->find($admin_user_auth_id);
+                $role = $this->getDoctrine()->getRepository(Role::class)->find($role_id);
 
                 $userAuthRole = new UserAuthRole();
                 $userAuthRole->setRole($role);
@@ -264,7 +266,7 @@ class AccountController extends AdminController
         $role_ids = $request->get('role_ids');
 
         foreach ($role_ids as $role_id) {
-            $user_auth_role = $this->getDoctrine()->getRepository('App:UserAuthRole')->findAssoc([
+            $user_auth_role = $this->getDoctrine()->getRepository(UserAuthRole::class)->findAssoc([
                 'user_auth_id' => $admin_user_auth_id,
                 'role_id' => $role_id
             ]);

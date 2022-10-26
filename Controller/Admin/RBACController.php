@@ -14,6 +14,7 @@ use App\Business\PlatformBusiness\PlatformClass;
 use App\Business\RBACBusiness\PermissionBusiness;
 use App\Business\RBACBusiness\RoleBusiness;
 use App\Entity\Role;
+use App\Entity\Permission;
 use App\Repository\PermissionRepository;
 use App\Repository\RoleRepository;
 use PHPZlc\Admin\Strategy\Navigation;
@@ -54,8 +55,8 @@ class RBACController extends AdminController
         }
 
         $this->roleBusiness = new RoleBusiness($this->container);
-        $this->roleRepository = $this->getDoctrine()->getRepository('App:Role');
-        $this->permissionRepository = $this->getDoctrine()->getRepository('App:Permission');
+        $this->roleRepository = $this->getDoctrine()->getRepository(Role::class);
+        $this->permissionRepository = $this->getDoctrine()->getRepository(Permission::class);
 
         $this->adminStrategy->addNavigation(new Navigation('角色与权限'));
 

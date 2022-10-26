@@ -15,6 +15,7 @@ use App\Business\AuthBusiness\UserAuthBusiness;
 use App\Business\PlatformBusiness\PlatformClass;
 use App\Business\RBACBusiness\PermissionBusiness;
 use App\Business\RBACBusiness\RBACBusiness;
+use App\Entity\Admin;
 use App\Entity\UserAuth;
 use App\Repository\AdminRepository;
 use PHPZlc\Admin\Strategy\AdminStrategy;
@@ -69,7 +70,7 @@ class AdminController extends SystemBaseController
         PlatformClass::setPlatform($this->getParameter('platform_admin'));
 
         $this->rbac = new RBACBusiness($this->container, PlatformClass::getPlatform());
-        $this->adminRepository = $this->getDoctrine()->getRepository('App:Admin');
+        $this->adminRepository = $this->getDoctrine()->getRepository(Admin::class);
 
         //菜单
         $menus = [
