@@ -114,10 +114,12 @@
                 },
 
                 captcha() {
-                    let that = this;
-                    $.post("{{ path('captcha_generate') }}", {captcha: 'admin_auth_login', format:'base64'}, function(res) {
-                        document.getElementById('img').src = res;
-                    }, )
+                    {% if admin_env() != 'dev' %}
+                        let that = this;
+                        $.post("{{ path('captcha_generate') }}", {captcha: 'admin_auth_login', format:'base64'}, function(res) {
+                            document.getElementById('img').src = res;
+                        }, )
+                    {% endif %}
                 }
 
             }
