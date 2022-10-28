@@ -76,12 +76,12 @@ class AdminAuth extends AbstractBusiness implements SubjectAuthInterface
      */
     public function checkStatus($user)
     {
-        if($user->getisDisable() == 1){
+        if($user->getisDisable()){
             Errors::setErrorMessage('账号已被禁用,请联系管理员');
             return false;
         }
 
-        if($user->getisDel() == 1){
+        if($user->getisDel()){
             Errors::setErrorMessage('账号已被删除,请联系管理员');
             return false;
         }
