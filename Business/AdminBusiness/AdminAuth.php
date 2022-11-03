@@ -149,7 +149,7 @@ class AdminAuth extends AbstractBusiness implements SubjectAuthInterface
         }
 
         if(!empty($password)){
-            $userAuthBusiness = new UserAuthBusiness($this->container);
+            $admin->getUserAuth()->setPassword($password);
         }
 
         $this->em->flush();
