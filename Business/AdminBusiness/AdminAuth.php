@@ -31,7 +31,7 @@ class AdminAuth extends AbstractBusiness implements SubjectAuthInterface
     {
         parent::__construct($container);
 
-        $this->adminRepository = $this->getDoctrine()->getRepository(Admin::class);
+        $this->adminRepository = $this->em->getRepository(Admin::class);
     }
 
     /**

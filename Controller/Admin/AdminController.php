@@ -22,6 +22,7 @@ use PHPZlc\Admin\Strategy\AdminStrategy;
 use PHPZlc\Admin\Strategy\Menu;
 use PHPZlc\PHPZlc\Abnormal\Errors;
 use PHPZlc\PHPZlc\Bundle\Controller\SystemBaseController;
+use PHPZlc\PHPZlc\Bundle\Safety\ActionLoad;
 use PHPZlc\PHPZlc\Doctrine\ORM\Rule\Rule;
 use PHPZlc\PHPZlc\Responses\Responses;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -67,10 +68,12 @@ class AdminController extends SystemBaseController
 
     public function inlet($returnType = SystemBaseController::RETURN_SHOW_RESOURCE, $isLogin = true)
     {
+
         PlatformClass::setPlatform($this->getParameter('platform_admin'));
 
         $this->rbac = new RBACBusiness($this->container, PlatformClass::getPlatform());
-        $this->adminRepository = $this->getDoctrine()->getRepository(Admin::class);
+        $this->adminRepository = ActionLoad::$globalDoctrine->getRepository(Admin::class);
+
 
         //菜单
         $menus = [
@@ -152,8 +155,7 @@ class AdminController extends SystemBaseController
      *
      * @return RedirectResponse|Response
      */
-    public function index()
-    {
+    public function index(){
         $r = $this->inlet(SystemBaseController::RETURN_SHOW_RESOURCE, true);
 
         if($r === true){

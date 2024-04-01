@@ -20,6 +20,7 @@ use App\Repository\RoleRepository;
 use PHPZlc\Admin\Strategy\Navigation;
 use PHPZlc\PHPZlc\Abnormal\Errors;
 use PHPZlc\PHPZlc\Bundle\Controller\SystemBaseController;
+use PHPZlc\PHPZlc\Bundle\Safety\ActionLoad;
 use PHPZlc\PHPZlc\Doctrine\ORM\Rule\Rule;
 use PHPZlc\PHPZlc\Responses\Responses;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,8 +56,8 @@ class RBACController extends AdminController
         }
 
         $this->roleBusiness = new RoleBusiness($this->container);
-        $this->roleRepository = $this->getDoctrine()->getRepository(Role::class);
-        $this->permissionRepository = $this->getDoctrine()->getRepository(Permission::class);
+        $this->roleRepository = ActionLoad::$globalDoctrine->getRepository(Role::class);
+        $this->permissionRepository = ActionLoad::$globalDoctrine->getRepository(Permission::class);
 
         $this->adminStrategy->addNavigation(new Navigation('角色与权限'));
 
@@ -193,7 +194,7 @@ class RBACController extends AdminController
             $this->roleBusiness->addPermission($this->roleRepository->find($role_id), $this->permissionRepository->find($permission_id), false);
         }
 
-        $this->getDoctrine()->getManager()->flush();
+       ActionLoad::$globalDoctrine->flush();
 
         return Responses::success('添加成功');
     }
@@ -218,7 +219,7 @@ class RBACController extends AdminController
             $this->roleBusiness->removePermission($this->roleRepository->find($role_id), $this->permissionRepository->find($permission_id), false);
         }
 
-        $this->getDoctrine()->getManager()->flush();
+       ActionLoad::$globalDoctrine->flush();
 
         return Responses::success('移除成功');
     }
@@ -243,7 +244,7 @@ class RBACController extends AdminController
             $this->roleBusiness->addContainRole($this->roleRepository->find($role_id), $this->roleRepository->find($c_role_id), false);
         }
 
-        $this->getDoctrine()->getManager()->flush();
+       ActionLoad::$globalDoctrine->flush();
 
         return Responses::success('添加成功');
     }
@@ -268,7 +269,7 @@ class RBACController extends AdminController
             $this->roleBusiness->removeContainRole($this->roleRepository->find($role_id), $this->roleRepository->find($c_role_id), false);
         }
 
-        $this->getDoctrine()->getManager()->flush();
+       ActionLoad::$globalDoctrine->flush();
 
         return Responses::success('移除成功');
     }

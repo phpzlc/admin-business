@@ -3,100 +3,56 @@
 namespace App\Entity;
 
 use App\Repository\AdminRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use PHPZlc\PHPZlc\Doctrine\ORM\Mapping\OuterColumn;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Business\AuthBusiness\UserInterface;
+use PHPZlc\PHPZlc\Doctrine\SortIdGenerator;
 
-/**
- * @ORM\Entity(repositoryClass=AdminRepository::class)
- * @ORM\Table(name="admin", options={"comment":"管理员表"})
- */
+#[ORM\Entity(repositoryClass: AdminRepository::class)]
+#[ORM\Table(name: "admin", options:["comment" => "管理员表"])]
 class Admin implements UserInterface
 {
-    /**
-     *
-     * @ORM\Id()
-     * @ORM\Column(name="id", type="string")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="PHPZlc\PHPZlc\Doctrine\SortIdGenerator")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "string")]
+    #[ORM\GeneratedValue(strategy: "CUSTOM")]
+    #[ORM\CustomIdGenerator(class: SortIdGenerator::class)]
+    private ?string $id = null;
 
-    /**
-     * @var UserAuth
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\UserAuth")
-     * @ORM\JoinColumn(name="user_auth_id", referencedColumnName="id")
-     */
-    private $userAuth;
+    #[ORM\ManyToOne(targetEntity:"App\Entity\UserAuth")]
+    #[ORM\JoinColumn(name:"user_auth_id", referencedColumnName:"id")]
+    private ?UserAuth $userAuth = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=30, nullable=true, options={"commnet":"管理员名称"})
-     */
-    private $name;
+    #[ORM\Column(name:"name", type:"string", length:30, nullable:true, options:["comment" => "管理员名称"])]
+    private ?string $name = null;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank(message="请填写登录账号")
-     * @Assert\Length(max="30", maxMessage="登录账号最大长度为30")
-     * @Assert\Regex(pattern="/^\w{6,30}$/", message="登录账号格式错误，格式为6～30位英文字母")
-     *
-     *
-     * @ORM\Column(name="account", type="string", length=30, options={"commnt":"登录账号"})
-     */
-    private $account;
+    #[ORM\Column(name: "account", type: "string", length: 30, options: ["comment" => "登录账号"])]
+    #[Assert\NotBlank(message: "请填写登录账号")]
+    #[Assert\Length(max: 30, maxMessage: "登录账号最大长度为30")]
+    #[Assert\Regex(pattern: "/^\w{6,30}$/", message: "登录账号格式错误，格式为6～30位英文字母")]
+    private ?string $account = null;
 
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_disable", type="boolean", options={"comment":"是否禁用", "default":"0"})
-     */
-    private $isDisable = false;
+    #[ORM\Column(name:"is_disable", type: "smallint", options: ["comment" => "是否禁用", "default" => 0])]
+    private int $isDisable = 0;
 
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_del", type="boolean", options={"comment":"是否删除", "default":"0"})
-     */
-    private $isDel = false;
+    #[ORM\Column(name:"is_del", type: "smallint", options: ["comment" => "是否删除", "default" => 0])]
+    private int $isDel = 0;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="create_at", type="datetime", options={"comment":"创建时间"})
-     */
-    private $createAt;
+    #[ORM\Column(name:"is_built", type: "smallint", options: ["comment" => "是否内置", "default" => 0])]
+    private int $isBuilt = 0;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="update_at", type="datetime", nullable=true, options={"comment":"更新时间"})
-     */
-    private $updateAt;
+    #[ORM\Column(name:"is_super", type: "smallint", options: ["comment" => "是否超级管理员", "default" => 0])]
+    private int $isSuper = 0;
 
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_built", type="boolean", options={"comment":"是否内置", "default":"0"})
-     */
-    private $isBuilt = false;
+    #[OuterColumn(name: "role_string", type: "string", sql: "(IF(sql_pre.is_super = 1,'超级管理员', (select GROUP_CONCAT(r.name) from role r where id in (select role_id from user_auth_role uar where uar.user_auth_id = sql_pre.user_auth_id))))", options: ["comment" => "是否超级管理员"])]
+    private ?string $roleString = null;
 
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_super", type="boolean", options={"comment":"是否超级管理员", "default":"0"})
-     */
-    private $isSuper = false;
+    #[ORM\Column(name: "update_at", type: "datetime", nullable:true, options:["comment" => "更新时间"])]
+    private ?\DateTime $updateAt = null;
 
-    /**
-     * @OuterColumn(name="role_string", type="string", sql="(IF(sql_pre.is_super = 1,'超级管理员', (select GROUP_CONCAT(r.name) from role r where id in (select role_id from user_auth_role uar where uar.user_auth_id = sql_pre.user_auth_id))))", options={"comment":"角色"})
-     */
-    private $roleString;
+    #[ORM\Column(name: "create_at", type: "datetime", options:["comment" => "创建时间"])]
+    private ? \DateTime $createAt;
 
     public function getId(): ?string
     {
@@ -108,7 +64,7 @@ class Admin implements UserInterface
         return $this->name;
     }
 
-    public function setName(?string $name): self
+    public function setName(?string $name): static
     {
         $this->name = $name;
 
@@ -120,7 +76,7 @@ class Admin implements UserInterface
         return $this->account;
     }
 
-    public function setAccount(string $account): self
+    public function setAccount(string $account): static
     {
         $this->account = $account;
 
@@ -129,36 +85,48 @@ class Admin implements UserInterface
 
     public function getIsDisable(): ?bool
     {
-        return $this->isDisable;
+        return (bool)$this->isDisable;
     }
 
-    public function setIsDisable(bool $isDisable): self
+    public function setIsDisable(bool $isDisable): static
     {
-        $this->isDisable = $isDisable;
+        $this->isDisable = (int)$isDisable;
 
         return $this;
     }
 
     public function getIsDel(): ?bool
     {
-        return $this->isDel;
+        return (bool)$this->isDel;
     }
 
-    public function setIsDel(bool $isDel): self
+    public function setIsDel(bool $isDel): static
     {
-        $this->isDel = $isDel;
+        $this->isDel = (int)$isDel;
 
         return $this;
     }
 
-    public function getCreateAt(): ?\DateTimeInterface
+    public function getIsBuilt(): ?bool
     {
-        return $this->createAt;
+        return (bool)$this->isBuilt;
     }
 
-    public function setCreateAt(\DateTimeInterface $createAt): self
+    public function setIsBuilt(bool $isBuilt): static
     {
-        $this->createAt = $createAt;
+        $this->isBuilt = (int)$isBuilt;
+
+        return $this;
+    }
+
+    public function getIsSuper(): ?bool
+    {
+        return (bool)$this->isSuper;
+    }
+
+    public function setIsSuper(bool $isSuper): static
+    {
+        $this->isSuper = (int)$isSuper;
 
         return $this;
     }
@@ -168,9 +136,21 @@ class Admin implements UserInterface
         return $this->updateAt;
     }
 
-    public function setUpdateAt(?\DateTimeInterface $updateAt): self
+    public function setUpdateAt(?\DateTimeInterface $updateAt): static
     {
         $this->updateAt = $updateAt;
+
+        return $this;
+    }
+
+    public function getCreateAt(): ?\DateTimeInterface
+    {
+        return $this->createAt;
+    }
+
+    public function setCreateAt(\DateTimeInterface $createAt): static
+    {
+        $this->createAt = $createAt;
 
         return $this;
     }
@@ -180,33 +160,9 @@ class Admin implements UserInterface
         return $this->userAuth;
     }
 
-    public function setUserAuth(?UserAuth $userAuth): self
+    public function setUserAuth(?UserAuth $userAuth): static
     {
         $this->userAuth = $userAuth;
-
-        return $this;
-    }
-
-    public function getIsBuilt(): ?bool
-    {
-        return $this->isBuilt;
-    }
-
-    public function setIsBuilt(bool $isBuilt): self
-    {
-        $this->isBuilt = $isBuilt;
-
-        return $this;
-    }
-
-    public function getIsSuper(): ?bool
-    {
-        return $this->isSuper;
-    }
-
-    public function setIsSuper(bool $isSuper): self
-    {
-        $this->isSuper = $isSuper;
 
         return $this;
     }

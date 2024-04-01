@@ -1,7 +1,7 @@
 <?php
 /**
  * 管理员内置数据
- * 
+ *
  * Created by Trick
  * user: Trick
  * Date: 2020/12/23
@@ -14,17 +14,11 @@ use App\Business\AdminBusiness\AdminAuth;
 use App\Entity\Admin;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use PHPZlc\PHPZlc\Bundle\Safety\ActionLoad;
 use Psr\Container\ContainerInterface;
 
 class AdminFixtures extends Fixture
 {
-    private $container;
-    
-    public function __construct(ContainerInterface $container = null )
-    {
-        $this->container = $container;
-    }
-    
     public function load(ObjectManager $manager)
     {
         $admin = new Admin();
@@ -34,7 +28,6 @@ class AdminFixtures extends Fixture
             ->setIsBuilt(true)
             ->setIsSuper(true);
 
-        
-        (new AdminAuth($this->container))->create($admin, '123456');
+        (new AdminAuth(ActionLoad::$globalContainer))->create($admin, '123456');
     }
 }

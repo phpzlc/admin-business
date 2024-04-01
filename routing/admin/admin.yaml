@@ -1,12 +1,12 @@
 # 首页
 admin_index:
   path:   /
-  controller: App\Controller\Admin\AdminController:index
+  controller: App\Controller\Admin\AdminController::index
 
 # 清除缓存
 admin_clear_cache:
   path: /clear-cache
-  controller: App\Controller\Admin\AdminController:clearCache
+  controller: App\Controller\Admin\AdminController:::clearCache
 
 # 登录
 admin_auth:

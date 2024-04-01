@@ -17,6 +17,7 @@ use App\Entity\UserAuth;
 use PHPZlc\Admin\Strategy\Navigation;
 use PHPZlc\PHPZlc\Abnormal\Errors;
 use PHPZlc\PHPZlc\Bundle\Controller\SystemBaseController;
+use PHPZlc\PHPZlc\Bundle\Safety\ActionLoad;
 use PHPZlc\PHPZlc\Doctrine\ORM\Rule\Rule;
 use PHPZlc\PHPZlc\Responses\Responses;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -62,7 +63,7 @@ class AccountController extends AdminController
 
         $this->adminStrategy->setUrlAnchor();
 
-        $admins = $this->adminRepository->findAll([Rule::R_SELECT => 'sql_pre.* , sql_pre.role_string']);
+        $admins = ActionLoad::$globalDoctrine->getRepository(Admin::class)->findAll([Rule::R_SELECT => 'sql_pre.* , sql_pre.role_string']);
 
         return $this->render('admin/account/index.twig', [
             'admins' => $admins
@@ -162,8 +163,8 @@ class AccountController extends AdminController
 
         return $this->render('admin/account/role.html.twig', array(
             'admin' => $admin,
-            'roles' => $this->getDoctrine()->getRepository(Role::class)->findAll(['platform' => PlatformClass::getPlatform()]),
-            'adminRoles' => $this->getDoctrine()->getRepository(UserAuthRole::class)->findAll([
+            'roles' => ActionLoad::$globalDoctrine->getRepository(Role::class)->findAll(['platform' => PlatformClass::getPlatform()]),
+            'adminRoles' => ActionLoad::$globalDoctrine->getRepository(UserAuthRole::class)->findAll([
                 'role'. Rule::RA_JOIN => [
                     'alias' => 'r'
                 ],
@@ -227,24 +228,24 @@ class AccountController extends AdminController
         $role_ids = $request->get('role_ids');
 
         foreach ($role_ids as $role_id) {
-            $user_auth_role = $this->getDoctrine()->getRepository(UserAuthRole::class)->findAssoc([
+            $user_auth_role = ActionLoad::$globalDoctrine->getRepository(UserAuthRole::class)->findAssoc([
                 'user_auth_id' => $admin_user_auth_id,
                 'role_id' => $role_id
             ]);
 
             if (empty($user_auth_role)) {
-                $userAuth = $this->getDoctrine()->getRepository(UserAuth::class)->find($admin_user_auth_id);
-                $role = $this->getDoctrine()->getRepository(Role::class)->find($role_id);
+                $userAuth = ActionLoad::$globalDoctrine->getRepository(UserAuth::class)->find($admin_user_auth_id);
+                $role = ActionLoad::$globalDoctrine->getRepository(Role::class)->find($role_id);
 
                 $userAuthRole = new UserAuthRole();
                 $userAuthRole->setRole($role);
                 $userAuthRole->setUserAuth($userAuth);
 
-                $this->getDoctrine()->getManager()->persist($userAuthRole);
+               ActionLoad::$globalDoctrine->persist($userAuthRole);
             }
         }
 
-        $this->getDoctrine()->getManager()->flush();
+        ActionLoad::$globalDoctrine->flush();
 
         return Responses::error('添加成功');
     }
@@ -266,16 +267,16 @@ class AccountController extends AdminController
         $role_ids = $request->get('role_ids');
 
         foreach ($role_ids as $role_id) {
-            $user_auth_role = $this->getDoctrine()->getRepository(UserAuthRole::class)->findAssoc([
+            $user_auth_role = ActionLoad::$globalDoctrine->getRepository(UserAuthRole::class)->findAssoc([
                 'user_auth_id' => $admin_user_auth_id,
                 'role_id' => $role_id
             ]);
 
             if (!empty($user_auth_role)) {
-                $this->getDoctrine()->getManager()->remove($user_auth_role);
+                ActionLoad::$globalDoctrine->remove($user_auth_role);
             }
 
-            $this->getDoctrine()->getManager()->flush();
+            ActionLoad::$globalDoctrine->flush();
         }
 
         return Responses::error('移除成功');
