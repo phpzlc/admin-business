@@ -49,10 +49,10 @@ class Admin implements UserInterface
     private ?string $roleString = null;
 
     #[ORM\Column(name: "update_at", type: "datetime", nullable:true, options:["comment" => "更新时间"])]
-    private ?\DateTime $updateAt = null;
+    private ?\DateTimeInterface $updateAt = null;
 
     #[ORM\Column(name: "create_at", type: "datetime", options:["comment" => "创建时间"])]
-    private ? \DateTime $createAt;
+    private ?\DateTimeInterface $createAt;
 
     public function getId(): ?string
     {
